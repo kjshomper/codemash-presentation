@@ -1,0 +1,120 @@
+scenarios:
+- description: OAuth resource request
+  call: standard
+  method: get
+  resource: "/oauth"
+  data: GET_REQUEST
+  tests: { # using .json format for a tests objects containing multiple test objects
+    { test: response_code_test, value: 200 },
+    { test: nested_key_test, key: user, value: 'someuser' }
+  }
+
+- description: OAuth resource request - full URL provided
+  call: standard
+  method: get
+  resource: "https://api-dev.nw.net/example-best-practices/oauth"
+  data: GET_REQUEST
+  tests: # using .yml format for the array of tests (one test)
+    - test: response_code_test
+      value: 200
+
+- description: OAuth resource request, OAuth not provided, but with authorization stubbed out
+  call: no_oauth
+  method: get
+  resource: "/oauth"
+  data: GET_REQUEST_STUB_AUTH
+  tests: { # since authorization is stubbed, the jwt isn't retrieved; so, the user is blank
+    { test: response_code_test, value: 200 },
+    { test: nested_key_test, key: user, value: '' }
+  }
+
+- description: JSON to XML - Options
+  call: standard
+  method: options
+  resource: "/jsontoxml"
+  data: JSON
+  tests:
+    - test: response_code_test
+      value: 200
+
+- description: Simple JSON to XML - Post
+  call: standard
+  method: post
+  resource: "/jsontoxml"
+  data: JSON
+  number: [1.5.2] # demonstrates scenario self numbering, which can be referenced in a dependency (see below)
+  tests:
+    - test: response_code_test
+      value: 200
+    - test: response_capture_test
+      value: 'standardizeAddress'
+      replace: '$stdAddress'
+      optional: true
+
+- description: Hard JSON to XML
+  call: standard
+  method: post
+  resource: "/hardjsontoxml"
+  data: STD_JSON
+  depends_on: [1.5.2, -2] # comma separated array allowed; relative referencing OK (e.g. -2 is the one before the prior)
+  tests:                      # if the dependent scenario(s) fail, this scenario will be skipped; if the dependent
+  - test: response_code_test  # scenario isn't explicitly numbered, it will have an index number relative to it's
+    value: 200                # position in the .yml file's scenarios array
+
+- description: Path Chaining
+  call: standard
+  method: post
+  resource: "/pathchaining"
+  data: PATH_CHAINING
+  tests:
+  - test: response_code_test
+    value: 200
+
+- description: Asynchronous Path Chaining
+  call: standard
+  method: post
+  resource: "/async"
+  data: PATH_CHAINING
+  tests:
+  - test: response_code_test
+    value: 200
+
+- description: Proxy Chaining
+  call: standard
+  method: post
+  resource: "/proxychaining"
+  data: PROXY_CHAINING
+  tests:
+  - test: response_code_test
+    value: 200
+
+# Test Apigee policies
+- description: Normal OAuth resource request, but with no APIKey
+  call: no_api_key
+  method: get
+  resource: "/oauth"
+  data: GET_REQUEST
+  tests: {
+    { test: response_code_test, value: 401 },
+    { test: substring_test, value: 'application is not authorized' }
+  }
+- description: Normal OAuth resource request, but with no Authorization header
+  call: no_oauth
+  method: get
+  resource: "/oauth"
+  data: GET_REQUEST
+  tests: {
+    { test: response_code_test, value: 401 },
+    { test: substring_test, value: 'user is not authorized' }
+  }
+
+#Error condition tests
+- description: Null resource with missing content-type header
+  call: standard
+  method: get
+  resource: "/"
+  data: NO_CONTENT_TYPE
+  tests: {
+    { test: response_code_test, value: 400 },
+    { test: substring_test, regex: true, value: 'Content-Type.*missing' }
+  }

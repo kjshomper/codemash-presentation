@@ -1,0 +1,77 @@
+NO_CONTENT_TYPE:
+  headers:
+    Accept: application/json
+    X-NW-Message-ID: 38573895734759
+
+GET_REQUEST:
+  query: '?name=Kevin&occupation=developer'
+  headers:
+    Content-Type: application/json
+    X-NW-Message-ID: 123456789
+
+GET_REQUEST_STUB_AUTH:
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+    X-NW-Message-ID: 123456789
+    X-NW-Stub-OAuth: true
+    X-NW-Stub-Proxy-Finegrained-Auth: true
+
+JSON:
+  payload: '{"address":
+              {
+                "city": "Waverly",
+                "zip": "45690",
+                "state": "OH",
+                "street": "100 Emmit Ave"
+              }
+            }'
+  headers:
+   Content-Type: application/json
+   Accept: application/json
+   X-NW-Message-ID: 123456789
+
+STD_JSON:
+  payload: '{"address":
+              {
+                "city": "Waverly",
+                "zip": "45690",
+                "state": "OH",
+                "street": "100 Emmit Ave"
+              }
+            } '
+  headers:
+   Content-Type: application/json
+   Accept: application/json
+   X-NW-Message-ID: 123456789
+
+PATH_CHAINING:
+  payload: '{"message": "hello world"}'
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+    X-NW-Message-ID: 123456789
+    X-NW-ApiKey: some_guid
+
+CUSTOM_MESSAGE:
+  payload: '{"message": "$custom_message"}'
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+    X-NW-Message-ID: 123456789
+    X-NW-ApiKey: some_guid
+
+PROXY_CHAINING:
+  payload: '{"message": "hello world"}'
+  query: '?apikey=some_guid'
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+    X-NW-Message-ID: 123456789
+
+BAD_AUTH_HEADER:
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+    X-NW-Message-ID: 123456789
+    Authorization: some_guid
