@@ -1,0 +1,15 @@
+## Authorization
+# Used for OAuth against Nationwide's Enterprise User Auth API
+
+OAUTH_TYPE: "employee"
+OAUTH_USER: "someuser"
+PRODUCT_URL: "https%3A%2F%2Fsample.nationwide.com"
+
+## Environments
+# Describe your environments here. Pick any environment name you like, then add _URL and _APIKEY
+
+DEV_URL: "https://api-dev.nw.net/example-best-practices"
+DEV_APIKEY: "some_guid"
+
+TEST_URL: "https://api-test.nw.net/example-best-practices"
+TEST_APIKEY: "some_guid"
